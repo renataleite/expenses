@@ -1,5 +1,9 @@
-import 'package:expenses/models/transaction.dart';
+import 'package:expenses/components/transaction_form.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
+import 'components/transaction_form.dart';
+import 'components/transaction_list.dart';
+import 'models/transaction.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -10,7 +14,12 @@ class ExpensesApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   final _transactions = [
     Transaction(
       id: 't1',
@@ -19,20 +28,64 @@ class MyHomePage extends StatelessWidget {
       date: DateTime.now(),
     ),
     Transaction(
-      id: 't2',
-      title: 'Conta de luz',
+      id: 't20',
+      title: 'Conta #01',
+      value: 211.30,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't3',
+      title: 'Conta #02',
+      value: 211.30,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't4',
+      title: 'Conta #03',
+      value: 211.30,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't5',
+      title: 'Conta #04',
       value: 211.30,
       date: DateTime.now(),
     ),
   ];
+
+  _addTransaction(String title, double value) {
+    final newTransaction = Transaction(
+        id: Random().nextDouble().toString(),
+        title: title,
+        value: value,
+        date: DateTime.now());
+    setState(() {
+      _transactions.add(newTransaction);
+    });
+  }
+
+  _openTransactionFormModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (_) {
+          return TransactionForm(_addTransaction);
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Despesas Pessoais'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => _openTransactionFormModal(context),
+          )
+        ],
       ),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: SingleChildScrollView(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Container(
@@ -43,40 +96,14 @@ class MyHomePage extends StatelessWidget {
                 elevation: 5,
               ),
             ),
-            Column(
-              children: _transactions
-                  .map((tr) => Card(
-                        child: Row(
-                          children: [
-                            Container(
-                                margin: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 10),
-                                decoration: BoxDecoration(
-                                    border: Border.all(
-                                  color: Colors.purple[50],
-                                  width: 2,
-                                )),
-                                padding: EdgeInsets.all(10),
-                                child: Text(
-                                  tr.value.toString(),
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.purple,
-                                  ),
-                                )),
-                            Column(
-                              children: [
-                                Text(tr.title),
-                                Text(tr.date.toString()),
-                              ],
-                            )
-                          ],
-                        ),
-                      ))
-                  .toList(),
-            )
-          ]),
+            TransactionList(_transactions),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () => _openTransactionFormModal(context)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
