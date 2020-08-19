@@ -10,7 +10,9 @@ main() => runApp(ExpensesApp());
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyHomePage());
+    return MaterialApp(
+      home: MyHomePage(),
+    );
   }
 }
 
@@ -33,32 +35,15 @@ class _MyHomePageState extends State<MyHomePage> {
       value: 211.30,
       date: DateTime.now(),
     ),
-    Transaction(
-      id: 't3',
-      title: 'Conta #02',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't4',
-      title: 'Conta #03',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't5',
-      title: 'Conta #04',
-      value: 211.30,
-      date: DateTime.now(),
-    ),
   ];
 
   _addTransaction(String title, double value) {
     final newTransaction = Transaction(
-        id: Random().nextDouble().toString(),
-        title: title,
-        value: value,
-        date: DateTime.now());
+      id: Random().nextDouble().toString(),
+      title: title,
+      value: value,
+      date: DateTime.now(),
+    );
     setState(() {
       _transactions.add(newTransaction);
     });
@@ -101,8 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => _openTransactionFormModal(context)),
+        child: Icon(Icons.add),
+        onPressed: () => _openTransactionFormModal(context),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
